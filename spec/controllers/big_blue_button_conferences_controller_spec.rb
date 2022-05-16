@@ -22,7 +22,7 @@ describe ConferencesController do
   before :once do
     # these specs need an enabled web conference plugin
     @plugin = PluginSetting.create!(name: "big_blue_button")
-    @plugin.update_attribute(:settings, { domain: "bigbluebutton.test", secret: "secret", recording_enabled: true })
+    @plugin.update_attribute(:settings, { domain: "BigBlueButton.test", secret: "secret", recording_enabled: true })
     course_with_teacher(active_all: true, user: user_with_pseudonym(active_all: true))
     @inactive_student = course_with_user("StudentEnrollment", course: @course, enrollment_state: "invited").user
     student_in_course(active_all: true, user: user_with_pseudonym(active_all: true))

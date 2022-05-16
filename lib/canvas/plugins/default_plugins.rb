@@ -150,22 +150,22 @@ module Canvas::Plugins::DefaultPlugins
                               encrypted_settings: [:password]
                             })
     Canvas::Plugin.register("big_blue_button", :web_conferencing, {
-                              name: -> { t :name, "BigBlueButton" },
-                              description: -> { t :description, "BigBlueButton web conferencing support" },
-                              website: "http://bigbluebutton.org",
-                              author: "Instructure",
-                              author_website: "http://www.instructure.com",
+                              name: -> { t :name, "OneScreen Revel" },
+                              description: -> { t :description, "OneScreen Revel web conferencing support" },
+                              website: "http://onescreensolutions.com",
+                              author: "OneScreen Solutions",
+                              author_website: "http://onescreensolutions.com",
                               version: "1.0.0",
                               settings_partial: "plugins/big_blue_button_settings",
                               validator: "BigBlueButtonValidator",
                               encrypted_settings: [:secret]
                             })
     Canvas::Plugin.register("big_blue_button_fallback", nil, {
-                              name: -> { t :name, "BigBlueButton Fallback For Migration" },
-                              description: -> { t :description, "BigBlueButton previous settings to preserve recordings during migration" },
-                              website: "http://bigbluebutton.org",
-                              author: "Instructure",
-                              author_website: "http://www.instructure.com",
+                              name: -> { t :name, "OneScreen Revel Fallback For Migration" },
+                              description: -> { t :description, "OneScreen Revel previous settings to preserve recordings during migration" },
+                              website: "http://onescreensolutions.com",
+                              author: "OneScreen Solutions",
+                              author_website: "http://onescreensolutions.com",
                               version: "1.0.0",
                               settings_partial: "plugins/big_blue_button_fallback_settings",
                               validator: "BigBlueButtonFallbackValidator",

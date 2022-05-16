@@ -177,7 +177,7 @@ class ConferencesController < ApplicationController
     return unless @current_user
 
     log_api_asset_access(["conferences", @context], "conferences", "other")
-    conferences = if @context.grants_any_right?(@current_user, :manage_content, *RoleOverride::GRANULAR_MANAGE_COURSE_CONTENT_PERMISSIONS)
+    conferences = if @context.grants_right?(@current_user, :manage_content)
                     @context.web_conferences.active
                   else
                     @current_user.web_conferences.active.shard(@context.shard).where(context_type: @context.class.to_s, context_id: @context.id)
@@ -398,6 +398,7 @@ class ConferencesController < ApplicationController
         if (url = @conference.craft_url(@current_user, session, named_context_url(@context, :context_url, include_host: true)))
           redirect_to url
         else
+          logger.debug "big blue button api call: #{@conference.craft_url}"
           flash[:error] = t(:general_error, "There was an error joining the conference")
           redirect_to named_context_url(@context, :context_url)
         end
@@ -408,6 +409,7 @@ class ConferencesController < ApplicationController
     end
   rescue => e
     Canvas::Errors.capture(e)
+    logger.debug "big blue button api call: #{@conference.craft_url}"
     flash[:error] = t("There was an error joining the conference.")
     redirect_to named_context_url(@context, :context_conferences_url)
   end

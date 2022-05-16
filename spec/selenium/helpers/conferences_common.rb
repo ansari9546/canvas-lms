@@ -130,7 +130,7 @@ module ConferencesCommon
     )
   end
 
-  def create_big_blue_button_conference(conference_key = "instructure_web_conference_defaultkey", title = "BigBlueButton Conference", duration = 60, record = true)
+  def create_big_blue_button_conference(conference_key = "instructure_web_conference_defaultkey", title = "OneScreen Revel Conference", duration = 60, record = true)
     BigBlueButtonConference.create!(
       conference_key: conference_key,
       title: title,

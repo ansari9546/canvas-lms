@@ -78,6 +78,7 @@ class BigBlueButtonConference < WebConference
     def generate_request(action, options, use_fallback_config: false)
       config_to_use = (use_fallback_config && fallback_config.presence) || config
       query_string = options.to_query
+      logger.error "BBB query_strings #{$query_string}"
       query_string << ("&checksum=" + Digest::SHA1.hexdigest(action.to_s + query_string + config_to_use[:secret_dec]))
       "https://#{config_to_use[:domain]}/bigbluebutton/api/#{action}?#{query_string}"
     end
@@ -143,8 +144,7 @@ class BigBlueButtonConference < WebConference
                               :logoutURL => (settings[:default_return_url] || "http://www.instructure.com"),
                               :record => settings[:record] ? "true" : "false",
                               :welcome => settings[:record] ? t("This conference may be recorded.") : "",
-                              "meta_canvas-recording-ready-user" => recording_ready_user,
-                              "meta_canvas-recording-ready-url" => recording_ready_url(current_host)
+                              "allowStartStopRecording" => "true"
                             }) or return nil
     @conference_active = true
     settings[:create_time] = response[:createTime] if response.present?
