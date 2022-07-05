@@ -16,7 +16,9 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 %>
 
-<%= fields_for :settings, OpenObject.new(settings) do |f| %>
+<%= fields_for :@settings, OpenObject.new(@settings) do |f| %>
+  <%= logger.error "settings========>>>>> #{@settings}"
+    %>
   <table style="width: 500px;" class="formtable">
     <tr>
       <td colspan="2">
@@ -55,10 +57,22 @@
           <%= f.check_box :replace_with_alternatives %> <%= f.label :replace_with_alternatives, :en => "Disable OneScreen Revel conferences; show a list of alternatives instead" %>
         </td>
       </tr>
-    <tr>
+    <tr style="display:none;">
       <td></td>
       <td>
         <%= f.check_box :use_fallback %> <%= f.label :use_fallback, :en => "Use OneScreen Revel Fallback Plugin settings to look for recordings for conferences that weren't hosted by the currently configured BBB instance." %>
+      </td>
+    </tr>
+    <tr>
+      <td><%= f.blabel :myscriptApiKey, :en => "MyScript Api Key " %></td>
+      <td>
+        <%= f.text_field :myscriptApiKey %><br>
+      </td>
+    </tr>
+    <tr>
+      <td><%= f.blabel :myscriptHmacKey, :en => "MyScript Hmac Key" %></td>
+      <td>
+        <%= f.text_field :myscriptHmacKey %><br>
       </td>
     </tr>
   </table>

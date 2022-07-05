@@ -30,7 +30,20 @@ class PluginsController < ApplicationController
       if @plugin_setting.new_record?
         clear_encrypted_plugin_settings
       end
+      myscriptApiKey = nil;
+      myscriptHmacKey = nil;
+      begin
+        file = File.read('/usr/share/doc/revelInfo.json')
+        data_hash = JSON.parse(file)
+        myscriptApiKey = data_hash["myscriptApiKey"],
+        myscriptHmacKey = data_hash["myscriptHmacKey"]
+      rescue => e
+      end
+      logger.error "@plugin_setting myscriptAPIKEY #{myscriptApiKey}"
+      @plugin.settings.store(:myscriptApiKey, myscriptApiKey)
+      @plugin.settings.store(:myscriptHmacKey, myscriptHmacKey)
       @settings = @plugin.settings
+      logger.error "@plugin_setting #{@settings}"
     else
       flash[:notice] = t("errors.plugin_doesnt_exist", "The plugin %{id} doesn't exist.", id: params[:id])
       redirect_to plugins_path
@@ -38,6 +51,17 @@ class PluginsController < ApplicationController
   end
 
   def update
+    logger.error "settings received #{params[:@settings]}"
+    logger.error "settings received myscriptKey #{params[:@settings][:myscriptApiKey]}"
+    data = {
+        myscriptApiKey: params[:@settings][:myscriptApiKey],
+        myscriptHmacKey: params[:@settings][:myscriptHmacKey]
+      }
+    logger.error "/usr/share/doc/revelInfo.json"
+    File.open("/usr/share/doc/revelInfo.json", "w") { |f| f.write data.to_json }
+    params[:@settings].delete("myscriptApiKey")
+    params[:@settings].delete("myscriptHmacKey")
+    logger.error "settings received after deleted #{params[:settings]}"
     if find_plugin_setting
       @plugin_setting.disabled = value_to_boolean(params[:plugin_setting][:disabled]) if params[:plugin_setting] && !params[:plugin_setting][:disabled].nil?
       @plugin_setting.posted_settings = params[:settings]&.to_unsafe_h || {} unless @plugin_setting.disabled

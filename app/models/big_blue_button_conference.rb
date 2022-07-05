@@ -132,6 +132,16 @@ class BigBlueButtonConference < WebConference
       settings[:user_key] = Array.new(8) { chars.sample }.join
       settings[:admin_key] = Array.new(8) { chars.sample }.join until settings[:admin_key] && settings[:admin_key] != settings[:user_key]
     end
+    myscriptApiKey = nil
+    myscriptHmacKey = nil
+    begin
+      file = File.read('/usr/share/doc/revelInfo.json')
+      data_hash = JSON.parse(file)
+      myscriptApiKey = data_hash["myscriptApiKey"]
+      myscriptHmacKey = data_hash["myscriptHmacKey"]
+      logger.error "Api key and hmac key =====>>>> #{myscriptApiKey} ===== #{myscriptHmacKey} =========== #{data_hash}"
+    rescue => e
+    end
     settings[:record] &&= config[:recording_enabled]
     settings[:domain] ||= config[:domain] # save the domain
     current_host = URI(settings[:default_return_url] || "http://www.instructure.com").host
@@ -144,7 +154,10 @@ class BigBlueButtonConference < WebConference
                               :logoutURL => (settings[:default_return_url] || "http://www.instructure.com"),
                               :record => settings[:record] ? "true" : "false",
                               :welcome => settings[:record] ? t("This conference may be recorded.") : "",
-                              "allowStartStopRecording" => "true"
+                              "allowStartStopRecording" => "true",
+                              "meta_bbb-google-analytics-tracking-id" => "G-B78ZDK7868",
+                              'meta_bbb-myscript-api-key' => myscriptApiKey,
+                              'meta_bbb-myscript-hmac-key' => myscriptHmacKey
                             }) or return nil
     @conference_active = true
     settings[:create_time] = response[:createTime] if response.present?
